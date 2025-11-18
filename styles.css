@@ -1054,14 +1054,23 @@ body::before {
     .main-content {
         margin-left: 0;
         padding: 0;
-        overflow-y: visible;
+        overflow-y: auto;
         overflow-x: hidden !important;
         width: 100%;
-        min-height: 100%;
-        height: auto;
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: 100dvh;
         display: flex;
         flex-direction: column;
-        flex: 1 0 auto;
+        flex: 1;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+    }
+    
+    .main-content::-webkit-scrollbar {
+        display: none;
     }
     
     /* Remove background image from main content on mobile */
@@ -1069,26 +1078,15 @@ body::before {
         display: none;
     }
     
-    /* Make container scrollable on mobile only */
+    /* Make container non-scrollable, main-content scrollable on mobile */
     .container {
         height: 100vh;
         height: -webkit-fill-available;
         height: 100dvh;
-        max-height: 100vh;
-        max-height: -webkit-fill-available;
-        max-height: 100dvh;
-        overflow-y: auto;
-        overflow-x: hidden !important;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* Internet Explorer 10+ */
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden;
         position: relative;
         display: flex;
-        flex-direction: column;
-    }
-    
-    .container::-webkit-scrollbar {
-        display: none;
+        flex-direction: row;
     }
     
     /* Make html/body non-scrollable on mobile */

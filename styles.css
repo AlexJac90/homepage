@@ -33,11 +33,17 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 0;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Ensure page starts at top */
 html, body {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Enhanced smooth scrolling */
@@ -151,6 +157,9 @@ body {
 .container {
     display: flex;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Sidebar Styles */
@@ -477,6 +486,9 @@ body {
     position: relative;
     min-height: 100vh;
     background: #1a1a1a;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Subtle color filter for background image */
@@ -527,6 +539,9 @@ body {
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 .content-section.active {
@@ -1133,11 +1148,17 @@ body {
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 0;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Ensure page starts at top */
 html, body {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Enhanced smooth scrolling */

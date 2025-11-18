@@ -1041,6 +1041,8 @@ body {
         width: 100%;
         min-height: auto;
         height: auto;
+        display: flex;
+        flex-direction: column;
     }
     
     /* Remove background image from main content on mobile */

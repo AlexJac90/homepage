@@ -1005,9 +1005,9 @@ body {
     /* Fix background image on mobile - remove fixed attachment and adjust sizing */
     .main-content::after {
         background-attachment: scroll;
-        background-size: cover;
+        background-size: 120% auto;
         background-position: center center;
-        /* Prevent excessive zooming on mobile */
+        /* Prevent excessive zooming on mobile - show more of the image */
         min-height: 100vh;
     }
     
@@ -1080,10 +1080,10 @@ body {
         height: 200px;
     }
     
-    /* Additional background fixes for small screens */
+    /* Additional background fixes for small screens - less zoom */
     .main-content::after {
-        background-size: cover;
-        background-position: center top;
+        background-size: 110% auto;
+        background-position: center center;
     }
 }
 

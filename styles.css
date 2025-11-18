@@ -1057,10 +1057,11 @@ body::before {
         overflow-y: visible;
         overflow-x: hidden !important;
         width: 100%;
-        min-height: auto;
+        min-height: 100%;
         height: auto;
         display: flex;
         flex-direction: column;
+        flex: 1 0 auto;
     }
     
     /* Remove background image from main content on mobile */
@@ -1073,12 +1074,17 @@ body::before {
         height: 100vh;
         height: -webkit-fill-available;
         height: 100dvh;
+        max-height: 100vh;
+        max-height: -webkit-fill-available;
+        max-height: 100dvh;
         overflow-y: auto;
         overflow-x: hidden !important;
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* Internet Explorer 10+ */
         -webkit-overflow-scrolling: touch;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
     
     .container::-webkit-scrollbar {
@@ -1165,6 +1171,7 @@ body::before {
         display: flex;
         flex-shrink: 0;
         flex-grow: 0;
+        flex-basis: auto;
         width: 100%;
         padding: 1rem;
         box-sizing: border-box;

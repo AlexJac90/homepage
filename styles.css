@@ -1035,8 +1035,12 @@ body {
     
     .main-content {
         margin-left: 0;
-        padding: 1rem;
+        padding: 0;
         overflow-y: visible;
+        overflow-x: hidden !important;
+        width: 100%;
+        min-height: auto;
+        height: auto;
     }
     
     /* Remove background image from main content on mobile */
@@ -1050,8 +1054,10 @@ body {
         height: -webkit-fill-available;
         height: 100dvh;
         overflow-y: auto;
+        overflow-x: hidden !important;
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* Internet Explorer 10+ */
+        -webkit-overflow-scrolling: touch;
     }
     
     .container::-webkit-scrollbar {
@@ -1061,9 +1067,12 @@ body {
     /* Make html/body non-scrollable on mobile */
     html, body {
         overflow-y: hidden;
+        overflow-x: hidden !important;
         height: 100vh;
         height: -webkit-fill-available;
         height: 100dvh;
+        position: fixed;
+        width: 100%;
     }
     
     /* Add background image only to home section on mobile */
@@ -1113,14 +1122,22 @@ body {
         padding-top: 2rem;
     }
     
-    /* Prevent text jumping on scroll */
+    /* Prevent text jumping on scroll and ensure sections stack properly */
     .content-section {
         -webkit-overflow-scrolling: touch;
         transform: none;
+        opacity: 1 !important;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        min-height: 100dvh;
+        position: relative;
+        display: flex;
+        flex-shrink: 0;
     }
     
     .content-section.active {
         transform: none;
+        opacity: 1 !important;
     }
     
     .main-title {

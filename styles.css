@@ -1002,6 +1002,25 @@ body {
         padding: 1rem;
     }
     
+    /* Fix background image on mobile - remove fixed attachment and adjust sizing */
+    .main-content::after {
+        background-attachment: scroll;
+        background-size: cover;
+        background-position: center center;
+        /* Prevent excessive zooming on mobile */
+        min-height: 100vh;
+    }
+    
+    /* Prevent text jumping on scroll */
+    .content-section {
+        -webkit-overflow-scrolling: touch;
+        transform: none;
+    }
+    
+    .content-section.active {
+        transform: none;
+    }
+    
     .main-title {
         font-size: 2.5rem;
     }
@@ -1059,6 +1078,12 @@ body {
     .about-profile-image {
         width: 200px;
         height: 200px;
+    }
+    
+    /* Additional background fixes for small screens */
+    .main-content::after {
+        background-size: cover;
+        background-position: center top;
     }
 }
 

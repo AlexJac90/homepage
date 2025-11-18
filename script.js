@@ -210,8 +210,13 @@ function initMobileMenu() {
     handleResize(); // Initial check
 }
 
-// Parallax effect for background (subtle)
+// Parallax effect for background (subtle) - disabled on mobile
 function initParallax() {
+    // Disable parallax on mobile devices to prevent jumping
+    if (window.innerWidth <= 768) {
+        return;
+    }
+    
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         const parallaxElements = document.querySelectorAll('.hero-content');
@@ -382,8 +387,13 @@ function debounce(func, wait) {
     };
 }
 
-// Apply debouncing to scroll events
+// Apply debouncing to scroll events - disabled on mobile
 const debouncedParallax = debounce(() => {
+    // Disable parallax on mobile devices
+    if (window.innerWidth <= 768) {
+        return;
+    }
+    
     const scrolled = window.pageYOffset;
     const parallaxElements = document.querySelectorAll('.hero-content');
     
@@ -393,5 +403,8 @@ const debouncedParallax = debounce(() => {
     });
 }, 10);
 
-window.addEventListener('scroll', debouncedParallax);
+// Only add scroll listener on desktop
+if (window.innerWidth > 768) {
+    window.addEventListener('scroll', debouncedParallax);
+}
 

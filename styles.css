@@ -37,7 +37,6 @@ html {
     overflow-y: auto;
     width: 100%;
     max-width: 100vw;
-    height: 100%;
     /* Extend background to cover iOS safe areas */
     margin: 0;
     padding: 0;
@@ -68,8 +67,6 @@ body {
     overflow-x: hidden !important;
     overflow-y: auto;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: 100dvh;
     width: 100%;
     max-width: 100vw;
     margin: 0;
@@ -1200,7 +1197,7 @@ body::before {
     }
 }
 
-/* Desktop - Hide mobile theme toggle */
+/* Desktop - Hide mobile theme toggle and ensure scrolling works */
 @media (min-width: 769px) {
     .mobile-theme-toggle {
         display: none !important;
@@ -1208,6 +1205,20 @@ body::before {
     
     .theme-toggle {
         display: flex;
+    }
+    
+    /* Ensure desktop scrolling works */
+    html, body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: static !important;
+        height: auto !important;
+    }
+    
+    .container {
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: 100vh;
     }
 }
 

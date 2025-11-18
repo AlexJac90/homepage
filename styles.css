@@ -968,14 +968,14 @@ body {
         position: fixed;
         top: 0;
         left: 0;
-        transform: translateX(-100%);
+        transform: translateX(-100%) !important;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
         box-shadow: 2px 0 20px var(--shadow-color);
     }
     
     .sidebar.open {
-        transform: translateX(0);
+        transform: translateX(0) !important;
     }
     
     /* Overlay for mobile sidebar */
@@ -987,14 +987,14 @@ body {
         height: 100%;
         background: rgba(0, 0, 0, 0.5);
         z-index: 999;
-        opacity: 0;
-        visibility: hidden;
+        opacity: 0 !important;
+        visibility: hidden !important;
         transition: all 0.3s ease;
     }
     
     .sidebar-overlay.active {
-        opacity: 1;
-        visibility: visible;
+        opacity: 1 !important;
+        visibility: visible !important;
     }
     
     .main-content {
@@ -1010,6 +1010,8 @@ body {
     /* Add background image only to home section on mobile */
     #home {
         position: relative;
+        align-items: flex-start;
+        padding-top: 2rem;
     }
     
     #home::before {
@@ -1018,16 +1020,17 @@ body {
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
+        height: 100vh;
         background: url('workstation-background.jpg');
         background-size: cover;
-        background-position: center center;
+        background-position: center top;
         background-repeat: no-repeat;
         background-attachment: scroll;
         filter: grayscale(60%) contrast(1.1) brightness(0.85) sepia(20%) hue-rotate(200deg) saturate(1.2);
         z-index: 0;
         opacity: 1;
         transition: opacity 0.8s ease-out;
+        pointer-events: none;
     }
     
     /* Overlay for home section */
@@ -1047,6 +1050,8 @@ body {
     #home .hero-content {
         position: relative;
         z-index: 2;
+        margin-top: 0;
+        padding-top: 2rem;
     }
     
     /* Prevent text jumping on scroll */

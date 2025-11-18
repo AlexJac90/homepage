@@ -136,6 +136,15 @@ function initMobileMenu() {
     const mobileThemeToggle = document.getElementById('mobileThemeToggle');
     const mobileThemeIcon = document.getElementById('mobileThemeIcon');
     
+    // Ensure sidebar is hidden on mobile on page load
+    if (window.innerWidth <= 768 && sidebar) {
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.classList.remove('open');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+    }
+    
     // Create mobile menu toggle button
     const menuToggle = document.createElement('button');
     menuToggle.className = 'mobile-menu-toggle';

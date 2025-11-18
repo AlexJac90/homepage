@@ -1002,13 +1002,51 @@ body {
         padding: 1rem;
     }
     
-    /* Fix background image on mobile - remove fixed attachment and adjust sizing */
+    /* Remove background image from main content on mobile */
     .main-content::after {
-        background-attachment: scroll;
-        background-size: 120% auto;
+        display: none;
+    }
+    
+    /* Add background image only to home section on mobile */
+    #home {
+        position: relative;
+    }
+    
+    #home::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('workstation-background.jpg');
+        background-size: cover;
         background-position: center center;
-        /* Prevent excessive zooming on mobile - show more of the image */
-        min-height: 100vh;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        filter: grayscale(60%) contrast(1.1) brightness(0.85) sepia(20%) hue-rotate(200deg) saturate(1.2);
+        z-index: 0;
+        opacity: 1;
+        transition: opacity 0.8s ease-out;
+    }
+    
+    /* Overlay for home section */
+    #home::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-secondary);
+        opacity: 0.5;
+        backdrop-filter: blur(1px);
+        z-index: 1;
+    }
+    
+    #home .hero-content {
+        position: relative;
+        z-index: 2;
     }
     
     /* Prevent text jumping on scroll */
@@ -1080,10 +1118,9 @@ body {
         height: 200px;
     }
     
-    /* Additional background fixes for small screens - less zoom */
+    /* Ensure background is removed on small screens too */
     .main-content::after {
-        background-size: 110% auto;
-        background-position: center center;
+        display: none;
     }
 }
 

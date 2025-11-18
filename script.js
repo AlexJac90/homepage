@@ -330,6 +330,65 @@ function updateThemeIcon(theme) {
     }
 }
 
+// Mobile background fade transition
+function initMobileBackgroundFade() {
+    // Only run on mobile devices
+    if (window.innerWidth > 768) {
+        return;
+    }
+    
+    const homeSection = document.getElementById('home');
+    if (!homeSection) return;
+    
+    const homeBackground = homeSection;
+    let lastScrollY = window.scrollY;
+    
+    function updateBackgroundOpacity() {
+        const scrollY = window.scrollY;
+        const homeHeight = homeSection.offsetHeight;
+        const scrollProgress = Math.min(scrollY / (homeHeight * 0.5), 1); // Fade out over first 50% of home section
+        
+        // Fade out background as user scrolls
+        const opacity = Math.max(0, 1 - scrollProgress);
+        homeBackground.style.setProperty('--bg-opacity', opacity);
+        
+        // Update the ::before pseudo-element opacity via CSS variable
+        const style = document.createElement('style');
+        style.textContent = `
+            @media (max-width: 768px) {
+                #home::before {
+                    opacity: var(--bg-opacity, 1) !important;
+                }
+            }
+        `;
+        // Remove old style if exists
+        const oldStyle = document.getElementById('mobile-bg-fade-style');
+        if (oldStyle) oldStyle.remove();
+        style.id = 'mobile-bg-fade-style';
+        document.head.appendChild(style);
+        
+        lastScrollY = scrollY;
+    }
+    
+    // Set initial opacity
+    homeBackground.style.setProperty('--bg-opacity', '1');
+    
+    // Throttle scroll events for better performance
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                updateBackgroundOpacity();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+    
+    // Initial call
+    updateBackgroundOpacity();
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Always start at the top (home screen) on page load/refresh
@@ -341,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initParallax();
     initThemeToggle();
+    initMobileBackgroundFade();
     addDynamicStyles();
     
     // Set initial active section to home

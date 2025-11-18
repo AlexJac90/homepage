@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexander Jacobsen - Software Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" data-tooltip="Enable Dark Mode">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="container">
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Mobile Theme Toggle Button -->
+            <button class="mobile-theme-toggle" id="mobileThemeToggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-moon" id="mobileThemeIcon"></i>
+            </button>
+            
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-image-container">
+                    <img src="profile-picture.png" alt="Alexander Jacobsen" class="profile-image" id="profileImage">
+                    <div class="profile-placeholder" id="profilePlaceholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <h2 class="profile-name">Alexander Jacobsen</h2>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="navigation">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active" data-section="home">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link" data-section="about">
+                            <i class="fas fa-user"></i>
+                            <span>About Me</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#portfolio" class="nav-link" data-section="portfolio">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Portfolio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link" data-section="contact">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Social Media Footer -->
+            <div class="social-footer">
+                <div class="social-icons">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="copyright">
+                    <i class="fas fa-copyright"></i>
+                    <span>2024 All Rights Reserved</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <div class="hero-content">
+                    <h1 class="main-title">
+                        <span class="first-name">Alexander</span>
+                        <span class="last-name">Jacobsen</span>
+                    </h1>
+                    <p class="subtitle">I am a Software Developer</p>
+                    <p class="description">
+                        "Turning ideas into scalable solutions."
+                    </p>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" class="content-section">
+                <div class="section-content">
+                    <h2 class="section-title">About Me</h2>
+                    <div class="about-content">
+                        <div class="about-text">
+                            <p class="section-text">
+                                I'm a dedicated software developer with a passion for creating efficient, scalable, and user-friendly applications. 
+                                With expertise in modern web technologies, I enjoy turning complex problems into simple, beautiful solutions.
+                            </p>
+                        </div>
+                        <div class="about-image">
+                            <img src="profile-picture.png" alt="Alexander Jacobsen" class="about-profile-image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Portfolio Section -->
+            <section id="portfolio" class="content-section">
+                <div class="section-content">
+                    <h2 class="section-title">Portfolio</h2>
+                    <p class="section-text">
+                        Here you'll find a collection of my recent projects and work. Each project represents a unique challenge 
+                        and an opportunity to learn and grow as a developer.
+                    </p>
+                    <div class="portfolio-links">
+                        <a href="https://alexjac90.github.io/square-eyes-new" class="portfolio-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Square Eyes - Live Page</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="content-section">
+                <div class="section-content">
+                    <h2 class="section-title">Let's Connect!</h2>
+                    <div class="contact-content">
+                        <p class="section-text">
+                            I'm always open to discussing new projects, collaborations, or opportunities to contribute to innovative software solutions.
+                            Whether you have a question, a project idea, or just want to connect — feel free to reach out.
+                        </p>
+                        <div class="contact-info">
+                            <a href="mailto:jacobsen90@hotmail.no" class="contact-item contact-link">
+                                <span class="contact-icon">📧</span>
+                                <span class="contact-text">Email: jacobsen90@hotmail.no</span>
+                            </a>
+                            <a href="https://www.linkedin.com/in/alexander-vespestad-jacobsen-a52a0b234" class="contact-item contact-link" target="_blank" rel="noopener noreferrer">
+                                <span class="contact-icon">💼</span>
+                                <span class="contact-text">LinkedIn: Alexander Vespestad Jacobsen</span>
+                            </a>
+                            <a href="https://github.com/AlexJac90" class="contact-item contact-link" target="_blank" rel="noopener noreferrer">
+                                <span class="contact-icon">💻</span>
+                                <span class="contact-text">GitHub: github.com/AlexJac90</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -183,11 +183,7 @@ body {
     position: relative;
     margin: 0;
     padding: 0;
-    /* Content respects iOS safe areas, but background extends behind */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    /* Background extends to cover iOS safe areas (status bar, notch, etc.) */
 }
 
 /* Sidebar Styles */

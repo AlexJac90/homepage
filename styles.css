@@ -533,18 +533,20 @@ body::before {
 /* Subtle color filter for background image */
 .main-content::after {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
-    left: 0;
+    left: 280px;
     right: 0;
     bottom: 0;
+    width: calc(100% - 280px);
+    height: 100vh;
     background: url('workstation-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     filter: grayscale(60%) contrast(1.1) brightness(0.85) sepia(20%) hue-rotate(200deg) saturate(1.2);
     z-index: 0;
+    pointer-events: none;
 }
 
 .main-content::before {
@@ -1067,15 +1069,57 @@ body::before {
         -ms-overflow-style: none; /* Internet Explorer 10+ */
         -webkit-overflow-scrolling: touch;
         position: relative;
+        /* Ensure content can grow beyond viewport */
+        min-height: 100vh;
+        /* Add scroll snapping */
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
     }
     
     .main-content::-webkit-scrollbar {
         display: none;
     }
     
-    /* Remove background image from main content on mobile */
+    /* Fixed background image for all sections on mobile */
     .main-content::after {
-        display: none;
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: 100dvh;
+        background: url('workstation-background.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        filter: grayscale(60%) contrast(1.1) brightness(0.85) sepia(20%) hue-rotate(200deg) saturate(1.2);
+        z-index: 0;
+        pointer-events: none;
+        display: block !important;
+    }
+    
+    /* Overlay for all sections on mobile */
+    .main-content::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: 100dvh;
+        background: var(--bg-secondary);
+        opacity: 0.5;
+        backdrop-filter: blur(1px);
+        z-index: 1;
+        pointer-events: none;
+        display: block !important;
     }
     
     /* Make container non-scrollable, main-content scrollable on mobile */
@@ -1110,44 +1154,11 @@ body::before {
         right: calc(-1 * env(safe-area-inset-right, 0px));
     }
     
-    /* Add background image only to home section on mobile */
+    /* Home section styling on mobile */
     #home {
         position: relative;
         align-items: flex-start;
         padding-top: 2rem;
-    }
-    
-    #home::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 100vh;
-        background: url('workstation-background.jpg');
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-attachment: scroll;
-        filter: grayscale(60%) contrast(1.1) brightness(0.85) sepia(20%) hue-rotate(200deg) saturate(1.2);
-        z-index: 0;
-        opacity: 1;
-        transition: opacity 0.8s ease-out;
-        pointer-events: none;
-    }
-    
-    /* Overlay for home section */
-    #home::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--bg-secondary);
-        opacity: 0.5;
-        backdrop-filter: blur(1px);
-        z-index: 1;
     }
     
     #home .hero-content {
@@ -1173,6 +1184,10 @@ body::before {
         width: 100%;
         padding: 1rem;
         box-sizing: border-box;
+        z-index: 2;
+        /* Add scroll snapping */
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
     }
     
     .content-section.active {
@@ -1212,6 +1227,23 @@ body::before {
         display: flex;
     }
     
+    /* Ensure sidebar is visible on desktop */
+    .sidebar {
+        display: flex !important;
+        transform: translateX(0) !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Hide mobile menu toggle on desktop */
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
     /* Ensure desktop scrolling works */
     html, body {
         overflow-y: auto !important;
@@ -1224,6 +1256,62 @@ body::before {
         overflow-y: visible !important;
         height: auto !important;
         min-height: 100vh;
+    }
+    
+    /* Add scroll snapping to desktop - more aggressive */
+    html {
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        scroll-padding-top: 0;
+        overflow-y: scroll;
+        overscroll-behavior-y: contain;
+    }
+    
+    body {
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        overscroll-behavior-y: contain;
+    }
+    
+    .content-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        scroll-margin-top: 0;
+        scroll-snap-margin: 0;
+        min-height: 100vh;
+    }
+    
+    /* Ensure smooth momentum scrolling on desktop */
+    * {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent scroll jumping */
+    .main-content {
+        scroll-snap-type: none; /* Disable on main-content for desktop, use html/body instead */
+    }
+    
+    /* Fixed background image for desktop - same as mobile */
+    .main-content::after {
+        position: fixed;
+        top: 0;
+        left: 280px;
+        right: 0;
+        bottom: 0;
+        width: calc(100% - 280px);
+        height: 100vh;
+        background-attachment: fixed;
+    }
+    
+    /* Ensure background overlay is also fixed */
+    .main-content::before {
+        position: fixed;
+        top: 0;
+        left: 280px;
+        right: 0;
+        bottom: 0;
+        width: calc(100% - 280px);
+        height: 100vh;
     }
 }
 
@@ -1263,6 +1351,15 @@ body::before {
 * {
     scroll-behavior: smooth;
     box-sizing: border-box;
+}
+
+/* Hide scrollbars but keep functionality */
+html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+body {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
 }

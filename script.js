@@ -8,6 +8,8 @@ const themeIcon = document.getElementById('themeIcon');
 
 // Smooth scroll navigation functionality
 function initNavigation() {
+    const mainContent = document.querySelector('.main-content');
+    
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -16,11 +18,22 @@ function initNavigation() {
             const section = document.getElementById(targetSection);
             
             if (section) {
-                // Smooth scroll to the section
-                section.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                const isMobile = window.innerWidth <= 768;
+                
+                if (isMobile && mainContent) {
+                    // On mobile, scroll the main-content container
+                    const sectionTop = section.offsetTop;
+                    mainContent.scrollTo({
+                        top: sectionTop,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // On desktop, use scrollIntoView
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
                 
                 // Update active states after scroll
                 setTimeout(() => {
@@ -33,20 +46,27 @@ function initNavigation() {
     // Handle scroll to update active states with ultra-smooth detection
     let isScrolling = false;
     
-    window.addEventListener('scroll', () => {
+    const handleScroll = () => {
         if (!isScrolling) {
             requestAnimationFrame(() => {
+                const isMobile = window.innerWidth <= 768;
                 const sections = document.querySelectorAll('.content-section');
                 let currentSection = '';
-                let minDistance = Infinity;
+                let maxVisible = 0;
                 
                 sections.forEach(section => {
                     const rect = section.getBoundingClientRect();
-                    const distance = Math.abs(rect.top);
+                    const viewportHeight = isMobile && mainContent ? mainContent.clientHeight : window.innerHeight;
                     
-                    // More sensitive detection for quicker transitions
-                    if (distance < minDistance && rect.top <= window.innerHeight * 0.6) {
-                        minDistance = distance;
+                    // Calculate how much of the section is visible
+                    const visibleTop = Math.max(0, -rect.top);
+                    const visibleBottom = Math.min(rect.height, viewportHeight - rect.top);
+                    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+                    const visibleRatio = visibleHeight / viewportHeight;
+                    
+                    // Find the section with the most visible area
+                    if (visibleRatio > maxVisible && rect.top < viewportHeight * 0.7) {
+                        maxVisible = visibleRatio;
                         currentSection = section.id;
                     }
                 });
@@ -59,7 +79,316 @@ function initNavigation() {
             });
             isScrolling = true;
         }
-    });
+    };
+    
+    // Add scroll listener to both containers (only one will actually fire on each device type)
+    if (mainContent) {
+        mainContent.addEventListener('scroll', handleScroll);
+    }
+    window.addEventListener('scroll', handleScroll);
+    
+    // Add scroll snapping on both mobile and desktop - snap to nearest section when scroll ends
+    let scrollTimeout;
+    let lastScrollTop = 0;
+    let isScrollingToSection = false;
+    let lastScrollTime = Date.now();
+    
+    const handleScrollEnd = () => {
+        const isMobile = window.innerWidth <= 768;
+        const sections = document.querySelectorAll('.content-section');
+        
+        let scrollTop, viewportHeight, scrollContainer;
+        
+        if (isMobile && mainContent) {
+            // Mobile: scroll happens on main-content
+            scrollTop = mainContent.scrollTop;
+            viewportHeight = mainContent.clientHeight;
+            scrollContainer = mainContent;
+        } else {
+            // Desktop: scroll happens on window
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            viewportHeight = window.innerHeight;
+            scrollContainer = window;
+        }
+        
+        // Don't snap if we're already scrolling to a section
+        if (isScrollingToSection) {
+            lastScrollTop = scrollTop;
+            return;
+        }
+        
+        // Check if we're already at a section (within 30px threshold for more lenient snapping)
+        let isAlreadyAtSection = false;
+        sections.forEach(section => {
+            let sectionTop;
+            if (isMobile && mainContent) {
+                sectionTop = section.offsetTop;
+            } else {
+                sectionTop = section.offsetTop;
+            }
+            
+            const distance = Math.abs(scrollTop - sectionTop);
+            if (distance < 30) {
+                isAlreadyAtSection = true;
+            }
+        });
+        
+        // Calculate scroll delta first
+        const scrollDelta = Math.abs(scrollTop - lastScrollTop);
+        const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+        
+        // If already at a section, don't snap (but allow if scrolling in opposite direction)
+        // More lenient - allow snapping even if close to section if scrolling in opposite direction
+        if (isAlreadyAtSection && scrollDelta < 30) {
+            lastScrollTop = scrollTop;
+            return;
+        }
+        
+        let nearestSection = null;
+        let minDistance = Infinity;
+        
+        // Only snap if there was significant scroll movement
+        if (scrollDelta < 10) {
+            lastScrollTop = scrollTop;
+            return;
+        }
+        
+        sections.forEach(section => {
+            let sectionTop;
+            if (isMobile && mainContent) {
+                sectionTop = section.offsetTop;
+            } else {
+                // Desktop: get position relative to document
+                sectionTop = section.offsetTop;
+            }
+            
+            const sectionCenter = sectionTop + (section.offsetHeight / 2);
+            const viewportCenter = scrollTop + (viewportHeight / 2);
+            const distance = Math.abs(viewportCenter - sectionCenter);
+            
+            // On desktop, prefer sections in the scroll direction for more aggressive snapping
+            if (!isMobile) {
+                // Symmetric thresholds for both directions
+                const isInScrollDirection = scrollDirection === 'down' 
+                    ? sectionTop > scrollTop + 30   // Below current position
+                    : sectionTop < scrollTop - 30;  // Above current position (same threshold)
+                
+                // If scrolling down and section is below, or scrolling up and section is above
+                if (isInScrollDirection && distance < minDistance) {
+                    minDistance = distance;
+                    nearestSection = section;
+                } else if (!nearestSection && distance < minDistance) {
+                    // Fallback to nearest if no section in scroll direction
+                    minDistance = distance;
+                    nearestSection = section;
+                }
+            } else {
+                // Mobile: use nearest section
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestSection = section;
+                }
+            }
+        });
+        
+        // Only snap if we found a section and it's not the current one
+        if (nearestSection) {
+            const currentSectionTop = isMobile && mainContent 
+                ? nearestSection.offsetTop 
+                : nearestSection.offsetTop;
+            const currentDistance = Math.abs(scrollTop - currentSectionTop);
+            
+            // Only snap if we're not already close to this section
+            // Same threshold for both directions
+            const distanceThreshold = 50;
+            if (currentDistance > distanceThreshold) {
+                isScrollingToSection = true;
+                
+                if (isMobile && mainContent) {
+                    mainContent.scrollTo({
+                        top: nearestSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // Desktop: scroll window to section
+                    window.scrollTo({
+                        top: nearestSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Update active state
+                setTimeout(() => {
+                    updateActiveStates(nearestSection.id);
+                    isScrollingToSection = false;
+                }, 400);
+            }
+        }
+        
+        lastScrollTop = scrollTop;
+        lastScrollTime = Date.now();
+    };
+    
+    // More aggressive scroll end detection for desktop
+    const scrollEndHandler = () => {
+        const isMobile = window.innerWidth <= 768;
+        clearTimeout(scrollTimeout);
+        
+        // Update lastScrollTop continuously during scroll
+        if (!isMobile) {
+            lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        } else if (mainContent) {
+            lastScrollTop = mainContent.scrollTop;
+        }
+        
+        // Desktop: longer timeout to let CSS scroll snapping work first, only use as fallback
+        // CSS scroll snapping should handle most of it
+        const timeout = isMobile ? 150 : 200;
+        
+        scrollTimeout = setTimeout(() => {
+            // Only run if not already scrolling to a section (wheel handler might have triggered)
+            // And if enough time has passed since last scroll
+            const timeSinceLastScroll = Date.now() - lastScrollTime;
+            if (!isScrollingToSection && timeSinceLastScroll > 150) {
+                handleScrollEnd();
+            }
+        }, timeout);
+    };
+    
+    // Add scroll end handler to appropriate container
+    if (mainContent) {
+        mainContent.addEventListener('scroll', scrollEndHandler);
+    }
+    window.addEventListener('scroll', scrollEndHandler);
+    
+    // Initialize lastScrollTop
+    if (mainContent) {
+        lastScrollTop = mainContent.scrollTop;
+    } else {
+        lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    }
+    
+    // Desktop: Add immediate wheel-based scrolling for more responsive snapping
+    let wheelTimeout;
+    let wheelDelta = 0;
+    let lastWheelTime = 0;
+    
+    const handleWheel = (e) => {
+        // Only handle on desktop
+        if (window.innerWidth <= 768) {
+            return;
+        }
+        
+        // Don't interfere if we're already scrolling to a section
+        if (isScrollingToSection) {
+            return;
+        }
+        
+        const now = Date.now();
+        const timeSinceLastWheel = now - lastWheelTime;
+        lastWheelTime = now;
+        
+        // Accumulate wheel delta, reset if too much time passed
+        if (timeSinceLastWheel > 100) {
+            wheelDelta = 0;
+        }
+        
+        wheelDelta += e.deltaY;
+        const scrollDirection = wheelDelta > 0 ? 'down' : 'up';
+        
+        // Update lastScrollTop immediately to track scroll direction accurately
+        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        lastScrollTop = currentScrollTop;
+        
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            // Same threshold for both directions - make it symmetric
+            const scrollThreshold = 20; // Lower threshold for more responsive snapping
+            
+            if (Math.abs(wheelDelta) > scrollThreshold) {
+                const sections = document.querySelectorAll('.content-section');
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const viewportHeight = window.innerHeight;
+                const viewportTop = scrollTop;
+                const viewportBottom = scrollTop + viewportHeight;
+                const viewportCenter = scrollTop + (viewportHeight / 2);
+                
+                let targetSection = null;
+                let minDistance = Infinity;
+                
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    
+                    // Symmetric logic for both directions - use viewport boundaries
+                    if (scrollDirection === 'down') {
+                        // Find next section that starts below viewport center
+                        if (sectionTop > viewportCenter) {
+                            const distance = sectionTop - viewportCenter;
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                targetSection = section;
+                            }
+                        }
+                    } else {
+                        // Find previous section that ends above viewport center - symmetric logic
+                        if (sectionBottom < viewportCenter) {
+                            const distance = viewportCenter - sectionBottom;
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                targetSection = section;
+                            }
+                        }
+                    }
+                });
+                
+                // If no section found in scroll direction, find nearest
+                if (!targetSection) {
+                    sections.forEach((section) => {
+                        const sectionTop = section.offsetTop;
+                        const sectionCenter = sectionTop + (section.offsetHeight / 2);
+                        const viewportCenter = scrollTop + (viewportHeight / 2);
+                        const distance = Math.abs(viewportCenter - sectionCenter);
+                        
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            targetSection = section;
+                        }
+                    });
+                }
+                
+                // Only snap if we found a target and we're not already close to it
+                if (targetSection && !isScrollingToSection) {
+                    const currentDistance = Math.abs(scrollTop - targetSection.offsetTop);
+                    
+                    // Same threshold for both directions - make it symmetric
+                    const distanceThreshold = 50;
+                    
+                    // Only snap if we're not already at this section
+                    if (currentDistance > distanceThreshold) {
+                        isScrollingToSection = true;
+                        window.scrollTo({
+                            top: targetSection.offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update lastScrollTop to prevent conflicts
+                        lastScrollTop = targetSection.offsetTop;
+                        
+                        setTimeout(() => {
+                            updateActiveStates(targetSection.id);
+                            isScrollingToSection = false;
+                        }, 400);
+                    }
+                }
+            }
+            
+            wheelDelta = 0;
+        }, 60); // Shorter timeout for more responsive snapping (same for both directions)
+    };
+    
+    // Use passive listener for better performance
+    window.addEventListener('wheel', handleWheel, { passive: true });
 }
 
 function updateActiveStates(activeSectionId) {
